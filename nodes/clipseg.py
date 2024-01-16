@@ -110,10 +110,11 @@ class CLIPSegPro:
             Tuple[torch.Tensor, torch.Tensor, torch.Tensor]: The segmentation mask, the heatmap mask, and the binarized mask.
         """
            
+        device = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
         
         processor = CLIPSegProcessor.from_pretrained("CIDAS/clipseg-rd64-refined")
         model = CLIPSegForImageSegmentation.from_pretrained("CIDAS/clipseg-rd64-refined")
-        model.to('cuda')
+        model.to(device)
 
         tensor_bws = []
         image_out_heatmaps = []
@@ -130,7 +131,7 @@ class CLIPSegPro:
             prompt = text.split(';')
             
             input_prc = processor(text=prompt, images=[i] * len(prompt), padding="max_length", return_tensors="pt")
-            input_prc = input_prc.to('cuda')
+            input_prc = input_prc.to(device)
             
             # Predict the segemntation mask
             with torch.no_grad():
@@ -197,8 +198,3 @@ class CLIPSegPro:
     #OUTPUT_NODE = False
 
 
-# A dictionary that contains all nodes you want to export with their names
-# NOTE: names should be globally unique
-NODE_CLASS_MAPPINGS = {
-    "CLIPSegPro": CLIPSegPro,
-}
