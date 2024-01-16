@@ -1,4 +1,4 @@
-from clipseg import CLIPSegPro
+from .clipseg import CLIPSegPro
 """
 @author: hoveychen
 @title: CLIPSegPro
