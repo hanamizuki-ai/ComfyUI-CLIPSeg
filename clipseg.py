@@ -146,8 +146,7 @@ class CLIPSegPro:
                 tensor = torch.sigmoid(output) # get the mask
                 
                 # Apply a threshold to the original tensor to cut off low values
-                thresh = threshold
-                tensor_thresholded = torch.where(tensor > thresh, tensor, torch.tensor(0, dtype=torch.float))
+                tensor_thresholded = torch.where(tensor > threshold, torch.tensor(1, dtype=torch.float), torch.tensor(0, dtype=torch.float))
                 masks.append(tensor_thresholded)
 
             masks = torch.stack(masks).max(dim=0)[0]
